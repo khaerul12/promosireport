@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Dashboard - Division Promosi</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --border-color: #e2e8f0;
+            --shadow-light: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-large: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-tertiary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-quaternary: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border-radius: 20px;
+            box-shadow: var(--shadow-large);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .dashboard-header {
+            background: var(--gradient-primary);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .dashboard-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dashboard-nav {
+            background: var(--bg-secondary);
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: transparent;
+            border: 2px solid transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-tab:not(.active):hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .dashboard-content {
+            padding: 40px;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .report-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-large);
+        }
+
+        .card-header {
+            padding: 25px 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header.gradient-1 { background: var(--gradient-primary); }
+        .card-header.gradient-2 { background: var(--gradient-secondary); }
+        .card-header.gradient-3 { background: var(--gradient-tertiary); }
+        .card-header.gradient-4 { background: var(--gradient-quaternary); }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-title {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-content {
+            padding: 0;
+            height: 500px;
+        }
+
+        .looker-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: var(--bg-tertiary);
+        }
+
+        .placeholder-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .placeholder-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .placeholder-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .placeholder-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-width: 300px;
+        }
+
+        .setup-guide {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .setup-guide h3 {
+            color: #92400e;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .step-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .step-number {
+            background: #f59e0b;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            color: #a16207;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .last-updated {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .dashboard-header {
+                padding: 30px 20px;
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+            
+            .dashboard-content {
+                padding: 20px;
+            }
+            
+            .reports-grid {
+                gap: 20px;
+            }
+            
+            .card-content {
+                height: 400px;
+            }
+            
+            .header-stats {
+                gap: 20px;
+            }
+            
+            .nav-tabs {
+                gap: 15px;
+            }
+            
+            .setup-guide {
+                padding: 20px;
+            }
+            
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+            
+            .card-content {
+                height: 350px;
+            }
+            
+            .placeholder-content {
+                padding: 20px;
+            }
+            
+            .placeholder-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f9fafb;
+                --text-secondary: #d1d5db;
+                --bg-primary: #1f2937;
+                --bg-secondary: #111827;
+                --bg-tertiary: #374151;
+                --border-color: #374151;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .dashboard-container {
+                box-shadow: none;
+            }
+            
+            .setup-guide {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="dashboard-title">Executive Dashboard</h1>
+                <p class="dashboard-subtitle">Division Promosi - Real-time Analytics & Insights</p>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">24/7</span>
+                        <span class="stat-label">Monitoring</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">Real-time</span>
+                        <span class="stat-label">Data</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">4</span>
+                        <span class="stat-label">Key Reports</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="dashboard-nav">
+            <div class="nav-tabs">
+                <div class="nav-tab active">📊 Overview</div>
+                <div class="nav-tab">📈 Performance</div>
+                <div class="nav-tab">🎯 Campaigns</div>
+                <div class="nav-tab">📋 Reports</div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <div class="reports-grid">
+                <!-- Report Card 1: Sales Performance -->
+                <div class="report-card">
+                    <div class="card-header gradient-1">
+                        <h2 class="card-title">
+                            <div class="card-icon">📈</div>
+                            Sales Performance Dashboard
+                        </h2>
+                        <p class="card-subtitle">Revenue tracking and sales metrics</p>
+                    </div>
+                    <div class="card-content">
+                      <iframe width="600" height="450" src="https://lookerstudio.google.com/embed/reporting/bc2a8655-8c07-4ff1-9b77-97e5fc4c60c8/page/p_6r2egglrod" 
+                        frameborder="0" 
+                        style="border:0" 
+                        allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                      </iframe>
+                        <!-- Placeholder -->
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">📈</div>
+                            <div class="placeholder-title">Sales Performance Analytics</div>
+                            <div class="placeholder-description">
+                                Revenue trends, conversion rates, and sales team performance metrics will be displayed here.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Card 2: Marketing Campaigns -->
+                <div class="report-card">
+                    <div class="card-header gradient-2">
+                        <h2 class="card-title">
+                            <div class="card-icon">🎯</div>
+                            Marketing Campaign Analytics
+                        </h2>
+                        <p class="card-subtitle">Campaign ROI and engagement metrics</p>
+                    </div>
+                    <div class="card-content">
+                        <!-- Uncomment and replace URL when ready -->
+                        <!--
+                        <iframe 
+                            class="looker-frame"
+                            src="YOUR_MARKETING_LOOKER_STUDIO_URL_HERE"
+                            frameborder="0"
+                            allowfullscreen>
+                        </iframe>
+                        -->
+                        
+                        <!-- Placeholder -->
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">🎯</div>
+                            <div class="placeholder-title">Marketing Campaign Insights</div>
+                            <div class="placeholder-description">
+                                Campaign performance, ROI analysis, and customer engagement metrics across all channels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Card 3: Customer Analytics -->
+                <div class="report-card">
+                    <div class="card-header gradient-3">
+                        <h2 class="card-title">
+                            <div class="card-icon">👥</div>
+                            Customer Analytics Hub
+                        </h2>
+                        <p class="card-subtitle">Customer behavior and segmentation</p>
+                    </div>
+                    <div class="card-content">
+                        <!-- Uncomment and replace URL when ready -->
+                        <!--
+                        <iframe 
+                            class="looker-frame"
+                            src="YOUR_CUSTOMER_LOOKER_STUDIO_URL_HERE"
+                            frameborder="0"
+                            allowfullscreen>
+                        </iframe>
+                        -->
+                        
+                        <!-- Placeholder -->
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">👥</div>
+                            <div class="placeholder-title">Customer Intelligence</div>
+                            <div class="placeholder-description">
+                                Customer journey analysis, segmentation insights, and behavioral patterns to drive growth.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Card 4: Operational Metrics -->
+                <div class="report-card">
+                    <div class="card-header gradient-4">
+                        <h2 class="card-title">
+                            <div class="card-icon">⚙️</div>
+                            Operational Excellence
+                        </h2>
+                        <p class="card-subtitle">KPIs and operational efficiency</p>
+                    </div>
+                    <div class="card-content">
+                        <!-- Uncomment and replace URL when ready -->
+                        <!--
+                        <iframe 
+                            class="looker-frame"
+                            src="YOUR_OPERATIONS_LOOKER_STUDIO_URL_HERE"
+                            frameborder="0"
+                            allowfullscreen>
+                        </iframe>
+                        -->
+                        
+                        <!-- Placeholder -->
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">⚙️</div>
+                            <div class="placeholder-title">Operational Dashboard</div>
+                            <div class="placeholder-description">
+                                Key performance indicators, process efficiency metrics, and operational health monitoring.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Setup Guide -->
+            <div class="setup-guide">
+                <h3>🚀 Quick Setup Guide</h3>
+                <div class="guide-steps">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Prepare Looker Studio Reports</div>
+                        <div class="step-description">
+                            Make sure your reports are published and set to "Anyone with the link can view"
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Get Embed URLs</div>
+                        <div class="step-description">
+                            In each report, click Share → Embed → Copy the embed URL
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Replace Placeholder URLs</div>
+                        <div class="step-description">
+                            Find the commented iframe code and replace "YOUR_LOOKER_STUDIO_URL_HERE"
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Remove Placeholders</div>
+                        <div class="step-description">
+                            Delete the placeholder divs after adding your real Looker Studio embeds
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 Division Promosi. All rights reserved.</p>
+                <div class="last-updated">
+                    Last updated: <span id="lastUpdated"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Set last updated timestamp
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Simple tab functionality
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Optional: Auto-refresh functionality
+        // setInterval(() => {
+        //     const iframes = document.querySelectorAll('.looker-frame');
+        //     iframes.forEach(iframe => {
+        //         if (iframe.src && iframe.src !== '') {
+        //             iframe.src = iframe.src; // Refresh iframe
+        //         }
+        //     });
+        // }, 300000); // Refresh every 5 minutes
+    </script>
+</body>
+</html>
