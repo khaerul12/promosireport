@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated System Report Div. Promosi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 3px solid #666666;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333333;
+            letter-spacing: 0.5px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-item {
+            background-color: #fafafa;
+            border: 2px solid #888888;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 450px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-item:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dashboard-header h2 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .looker-frame {
+            width: 100%;
+            height: 380px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #ffffff;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .placeholder-content {
+            width: 100%;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            color: #6c757d;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .placeholder-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255,255,255,0.3) 10px,
+                    rgba(255,255,255,0.3) 20px
+                );
+        }
+
+        .placeholder-text {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .instruction-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .instruction-box h3 {
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .instruction-box ol {
+            margin-left: 20px;
+        }
+
+        .instruction-box li {
+            margin-bottom: 5px;
+        }
+
+        /* Loading animation for placeholders */
+        .loading-animation {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-animation::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.6),
+                transparent
+            );
+            animation: loading 2s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .dashboard-grid {
+                gap: 20px;
+            }
+            
+            .dashboard-item {
+                min-height: 400px;
+            }
+            
+            .looker-frame,
+            .placeholder-content {
+                height: 330px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-width: 2px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .dashboard-item {
+                min-height: 350px;
+                padding: 15px;
+            }
+            
+            .looker-frame,
+            .placeholder-content {
+                height: 280px;
+            }
+            
+            .dashboard-header h2 {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 18px;
+                line-height: 1.3;
+            }
+            
+            .dashboard-item {
+                min-height: 300px;
+                padding: 12px;
+            }
+            
+            .looker-frame,
+            .placeholder-content {
+                height: 230px;
+            }
+            
+            .placeholder-text {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+            
+            .dashboard-item {
+                break-inside: avoid;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Integrated System Report Div. Promosi</h1>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Looker Studio Embedded 1 -->
+            <div class="dashboard-item">
+                <div class="dashboard-header">
+                    <h2>Looker Studio Embedded 1</h2>
+                </div>
+                <iframe 
+                    class="looker-frame"
+                    src="https://lookerstudio.google.com/reporting/bc2a8655-8c07-4ff1-9b77-97e5fc4c60c8"
+                    frameborder="0"
+                    style="border:0"
+                    allowfullscreen>
+                </iframe>
+                -->
+                
+                <!-- Placeholder - Remove this when you add your Looker Studio URL -->
+                <div class="placeholder-content loading-animation">
+                    <div class="placeholder-text">
+                        <strong>Looker Studio Dashboard 1</strong><br>
+                        Replace the commented iframe above with your Looker Studio embed URL
+                    </div>
+                </div>
+            </div>
+
+            <!-- Looker Studio Embedded 2 -->
+            <div class="dashboard-item">
+                <div class="dashboard-header">
+                    <h2>Looker Studio Embedded 2</h2>
+                </div>
+                <iframe 
+                    class="looker-frame"
+                    src="https://lookerstudio.google.com/reporting/bc2a8655-8c07-4ff1-9b77-97e5fc4c60c8"
+                    frameborder="0"
+                    style="border:0"
+                    allowfullscreen>
+                </iframe>
+                -->
+                
+                <!-- Placeholder - Remove this when you add your Looker Studio URL -->
+                <div class="placeholder-content loading-animation">
+                    <div class="placeholder-text">
+                        <strong>Looker Studio Dashboard 2</strong><br>
+                        Replace the commented iframe above with your Looker Studio embed URL
+                    </div>
+                </div>
+            </div>
+
+            <!-- Looker Studio Embedded 3 -->
+            <div class="dashboard-item">
+                <div class="dashboard-header">
+                    <h2>Looker Studio Embedded 3</h2>
+                </div>
+                <iframe 
+                    class="looker-frame"
+                    src="https://lookerstudio.google.com/reporting/bc2a8655-8c07-4ff1-9b77-97e5fc4c60c8"
+                    frameborder="0"
+                    style="border:0"
+                    allowfullscreen>
+                </iframe>
+                -->
+                
+                <!-- Placeholder - Remove this when you add your Looker Studio URL -->
+                <div class="placeholder-content loading-animation">
+                    <div class="placeholder-text">
+                        <strong>Looker Studio Dashboard 3</strong><br>
+                        Replace the commented iframe above with your Looker Studio embed URL
+                    </div>
+                </div>
+            </div>
+
+            <!-- Looker Studio Embedded 4 -->
+            <div class="dashboard-item">
+                <div class="dashboard-header">
+                    <h2>Looker Studio Embedded 4</h2>
+                </div>
+                <iframe 
+                    class="looker-frame"
+                    src="https://lookerstudio.google.com/reporting/bc2a8655-8c07-4ff1-9b77-97e5fc4c60c8"
+                    frameborder="0"
+                    style="border:0"
+                    allowfullscreen>
+                </iframe>
+                -->
+                
+                <!-- Placeholder - Remove this when you add your Looker Studio URL -->
+                <div class="placeholder-content loading-animation">
+                    <div class="placeholder-text">
+                        <strong>Looker Studio Dashboard 4</strong><br>
+                        Replace the commented iframe above with your Looker Studio embed URL
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instruction-box">
+            <h3>📋 How to Add Your Looker Studio Reports:</h3>
+            <ol>
+                <li>Open your Looker Studio report</li>
+                <li>Click the "Share" button in the top-right corner</li>
+                <li>Select "Embed report"</li>
+                <li>Copy the embed URL</li>
+                <li>Find the commented iframe code in the HTML above</li>
+                <li>Uncomment the iframe and replace "YOUR_LOOKER_STUDIO_URL_HERE" with your actual URL</li>
+                <li>Remove the placeholder div for that section</li>
+                <li>Repeat for all 4 dashboards</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
